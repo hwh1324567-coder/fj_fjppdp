@@ -252,15 +252,15 @@ export const MiddleColumn: React.FC<MiddleColumnProps> = ({
         textStyle: { color: '#fff' }
       },
       grid: {
-        left: '3%',
+        left: '2%',
         right: '4%',
         bottom: '10%',
-        top: '20%',
+        top: '28%',
         containLabel: true
       },
       xAxis: {
         type: 'category',
-        boundaryGap: false,
+        boundaryGap: true,
         data: trendData.years,
         axisLine: { lineStyle: { color: 'rgba(72,202,228,0.5)' } },
         axisLabel: { color: '#a0aec0' }
@@ -277,12 +277,26 @@ export const MiddleColumn: React.FC<MiddleColumnProps> = ({
           smooth: 0.6,
           data: trendData.values,
           symbolSize: 8,
-          itemStyle: { color: '#48cae4' },
-          lineStyle: { width: 3, color: '#48cae4' },
+          itemStyle: { 
+            color: '#84fab0',
+            shadowBlur: 10,
+            shadowColor: 'rgba(132, 250, 176, 0.8)'
+          },
+          lineStyle: { 
+            width: 3, 
+            color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+              { offset: 0, color: '#48cae4' },
+              { offset: 0.5, color: '#84fab0' },
+              { offset: 1, color: '#e2c285' }
+            ]),
+            shadowBlur: 10,
+            shadowColor: 'rgba(132, 250, 176, 0.5)'
+          },
           areaStyle: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: 'rgba(72,202,228,0.5)' },
-              { offset: 1, color: 'rgba(72,202,228,0.0)' }
+              { offset: 0, color: 'rgba(132, 250, 176, 0.4)' },
+              { offset: 0.5, color: 'rgba(72, 202, 228, 0.2)' },
+              { offset: 1, color: 'rgba(72, 202, 228, 0.0)' }
             ])
           },
           label: {
@@ -349,7 +363,7 @@ export const MiddleColumn: React.FC<MiddleColumnProps> = ({
         style={{ height: '78%' }}
       >
         {/* Map Container with Sea Background */}
-        <div className="w-full h-full absolute inset-0 bg-[rgba(2,6,23,0.4)] shadow-[inset_0_0_80px_rgba(72,202,228,0.1)] rounded-lg overflow-hidden border border-[rgba(72,202,228,0.15)] backdrop-blur-sm">
+        <div className="w-full h-full absolute inset-0 bg-[rgba(2,12,30,0.2)] shadow-[inset_0_0_80px_rgba(72,202,228,0.05)] rounded-xl overflow-hidden backdrop-blur-sm">
           <div ref={mapRef} className="w-full h-full absolute inset-0"></div>
         </div>
         
@@ -364,12 +378,12 @@ export const MiddleColumn: React.FC<MiddleColumnProps> = ({
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.2 }}
-              className="absolute top-4 right-4 z-30 bg-[#020814]/85 border border-[#48cae4] rounded p-3 shadow-[0_0_15px_rgba(72,202,228,0.4)] pointer-events-none backdrop-blur-md w-48"
+              className="absolute top-4 right-4 z-30 bg-gradient-to-br from-[rgba(2,12,30,0.8)] to-[rgba(2,8,20,0.9)] rounded-lg p-4 shadow-[0_10px_30px_rgba(0,0,0,0.5)] pointer-events-none backdrop-blur-md w-52 border border-[rgba(72,202,228,0.1)]"
             >
-              <div className="text-[#48cae4] font-bold text-lg mb-2 border-b border-[#48cae4]/30 pb-1 text-glow-cyan">
+              <div className="text-[#48cae4] font-bold text-lg mb-2 border-b border-[#48cae4]/20 pb-2 drop-shadow-[0_0_5px_rgba(72,202,228,0.5)]">
                 {activeCity}
               </div>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400 text-xs">总案件量</span>
                   <span className="text-white font-mono font-bold text-sm drop-shadow-[0_0_2px_rgba(255,255,255,0.5)]">
@@ -382,11 +396,11 @@ export const MiddleColumn: React.FC<MiddleColumnProps> = ({
                     +{cityData.find(d => d.city === activeCity)?.yoy}%
                   </span>
                 </div>
-                <div className="mt-2 pt-2 border-t border-[#48cae4]/20">
-                  <div className="text-[10px] text-[#48cae4]/70 mb-1">主要案件类型</div>
-                  <div className="flex flex-wrap gap-1">
-                    <span className="px-1.5 py-0.5 bg-[#e2c285]/20 text-[#e2c285] rounded text-[10px] border border-[#e2c285]/30">商标侵权</span>
-                    <span className="px-1.5 py-0.5 bg-[#48cae4]/20 text-[#48cae4] rounded text-[10px] border border-[#48cae4]/30">专利纠纷</span>
+                <div className="mt-2 pt-2 border-t border-[#48cae4]/10">
+                  <div className="text-[10px] text-[#48cae4]/70 mb-2">主要案件类型</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    <span className="px-1.5 py-0.5 bg-[rgba(226,194,133,0.1)] text-[#e2c285] rounded text-[10px]">商标侵权</span>
+                    <span className="px-1.5 py-0.5 bg-[rgba(72,202,228,0.1)] text-[#48cae4] rounded text-[10px]">专利纠纷</span>
                   </div>
                 </div>
               </div>
@@ -400,21 +414,32 @@ export const MiddleColumn: React.FC<MiddleColumnProps> = ({
         initial={{ opacity: 0, y: 50 }} 
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: 0.5, delay: 0.3 }}
-        className="w-full relative overflow-hidden glass-panel hud-glow rounded-md"
+        className="w-full relative overflow-hidden glass-panel hud-glow"
         style={{ 
           height: 'calc(22% - 8px)'
         }}
       >
-        {/* Corner decorations */}
-        <span className="absolute top-0 left-0 w-[15px] h-[15px] border-t-[3px] border-l-[3px] border-[#48cae4] pointer-events-none z-10 opacity-80 shadow-[0_0_5px_#48cae4]"></span>
-        <span className="absolute top-0 right-0 w-[15px] h-[15px] border-t-[3px] border-r-[3px] border-[#48cae4] pointer-events-none z-10 opacity-80 shadow-[0_0_5px_#48cae4]"></span>
-        <span className="absolute bottom-0 left-0 w-[15px] h-[15px] border-b-[3px] border-l-[3px] border-[#48cae4] pointer-events-none z-10 opacity-80 shadow-[0_0_5px_#48cae4]"></span>
-        <span className="absolute bottom-0 right-0 w-[15px] h-[15px] border-b-[3px] border-r-[3px] border-[#48cae4] pointer-events-none z-10 opacity-80 shadow-[0_0_5px_#48cae4]"></span>
+        {/* Delicate floating corners */}
+        <svg className="absolute top-0 left-0 w-3 h-3 text-[#48cae4] opacity-60 drop-shadow-[0_0_4px_#48cae4]" viewBox="0 0 12 12" fill="none">
+          <path d="M0 12V0H12" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+        <svg className="absolute top-0 right-0 w-3 h-3 text-[#48cae4] opacity-60 drop-shadow-[0_0_4px_#48cae4]" viewBox="0 0 12 12" fill="none">
+          <path d="M0 0H12V12" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+        <svg className="absolute bottom-0 left-0 w-3 h-3 text-[#48cae4] opacity-60 drop-shadow-[0_0_4px_#48cae4]" viewBox="0 0 12 12" fill="none">
+          <path d="M12 12H0V0" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+        <svg className="absolute bottom-0 right-0 w-3 h-3 text-[#48cae4] opacity-60 drop-shadow-[0_0_4px_#48cae4]" viewBox="0 0 12 12" fill="none">
+          <path d="M0 12H12V0" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+
+        {/* Subtle top glow line */}
+        <div className="absolute top-0 left-[10%] w-[80%] h-[1px] bg-gradient-to-r from-transparent via-[#48cae4] to-transparent opacity-30"></div>
         
         <div className="absolute top-3 left-4 flex items-center">
-          <span className="text-[#48cae4] mr-3 text-sm leading-none drop-shadow-[0_0_3px_#48cae4]">◈</span>
+          <span className="text-[#48cae4] mr-3 text-sm leading-none drop-shadow-[0_0_3px_#48cae4] opacity-80">◈</span>
           <span 
-            className="font-bold uppercase tracking-[0.15em] text-sm text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]"
+            className="font-bold tracking-[0.1em] text-sm text-white/90 drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]"
           >
             历年案件趋势
           </span>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LeftColumn } from './components/LeftColumn';
 import { MiddleColumn } from './components/MiddleColumn';
 import { RightColumn } from './components/RightColumn';
@@ -8,6 +8,14 @@ import { BackgroundEffects } from './components/BackgroundEffects';
 const App: React.FC = () => {
   const [activeCity, setActiveCity] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState('全部');
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <div 
@@ -32,7 +40,7 @@ const App: React.FC = () => {
 
           {/* Time display */}
           <div className="absolute right-8 top-1/2 -translate-y-1/2 text-[#48cae4] font-mono text-lg tracking-wider drop-shadow-[0_0_5px_rgba(72,202,228,0.5)]">
-            {new Date().toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+            {currentTime.toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
           </div>
         </header>
 
