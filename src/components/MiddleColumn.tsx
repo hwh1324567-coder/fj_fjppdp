@@ -21,6 +21,7 @@ export const MiddleColumn: React.FC<MiddleColumnProps> = ({
   const mapRef = useRef<HTMLDivElement>(null);
   const lineChartRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<echarts.ECharts | null>(null);
+  const [trendScale, setTrendScale] = useState<'week' | 'month' | 'year'>('year');
 
   // Init map once
   useEffect(() => {
@@ -244,6 +245,8 @@ export const MiddleColumn: React.FC<MiddleColumnProps> = ({
     if (!lineChartRef.current) return;
     const chart = echarts.init(lineChartRef.current);
     
+    const currentTrendData = trendData[trendScale];
+    
     const option = {
       tooltip: {
         trigger: 'axis',
@@ -261,7 +264,7 @@ export const MiddleColumn: React.FC<MiddleColumnProps> = ({
       xAxis: {
         type: 'category',
         boundaryGap: true,
-        data: trendData.years,
+        data: currentTrendData.labels,
         axisLine: { lineStyle: { color: 'rgba(72,202,228,0.5)' } },
         axisLabel: { color: '#a0aec0' }
       },
@@ -275,7 +278,7 @@ export const MiddleColumn: React.FC<MiddleColumnProps> = ({
           name: '案件数量',
           type: 'line',
           smooth: 0.6,
-          data: trendData.values,
+          data: currentTrendData.values,
           symbolSize: 8,
           itemStyle: { 
             color: '#84fab0',
@@ -305,11 +308,12 @@ export const MiddleColumn: React.FC<MiddleColumnProps> = ({
             color: '#fff',
             formatter: (params: any) => {
               const idx = params.dataIndex;
-              const yoy = trendData.yoy[idx];
-              return `{val|${params.value}}\n{yoy|同比 +${yoy}%}`;
+              const yoy = currentTrendData.yoy[idx];
+              const yoySign = yoy >= 0 ? '+' : '';
+              return `{val|${params.value}}\n{yoy|同比 ${yoySign}${yoy}%}`;
             },
             rich: {
-              val: { color: '#fff', fontSize: 14, fontWeight: 'bold', padding: [0, 0, 4, 0] },
+              val: { color: '#fff', fontSize: 13, fontWeight: 'bold', padding: [0, 0, 2, 0] },
               yoy: { color: '#e2c285', fontSize: 10 }
             }
           }
@@ -326,7 +330,7 @@ export const MiddleColumn: React.FC<MiddleColumnProps> = ({
       window.removeEventListener('resize', handleResize);
       chart.dispose();
     };
-  }, []);
+  }, [trendScale]);
 
   const filters = ['全部', '商标侵权', '著作权纠纷', '专利纠纷'];
 
@@ -436,13 +440,35 @@ export const MiddleColumn: React.FC<MiddleColumnProps> = ({
         {/* Subtle top glow line */}
         <div className="absolute top-0 left-[10%] w-[80%] h-[1px] bg-gradient-to-r from-transparent via-[#48cae4] to-transparent opacity-30"></div>
         
-        <div className="absolute top-3 left-4 flex items-center">
-          <span className="text-[#48cae4] mr-3 text-sm leading-none drop-shadow-[0_0_3px_#48cae4] opacity-80">◈</span>
-          <span 
-            className="font-bold tracking-[0.1em] text-sm text-white/90 drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]"
-          >
-            历年案件趋势
-          </span>
+        <div className="absolute top-3 left-4 right-4 flex items-center justify-between z-10">
+          <div className="flex items-center">
+            <span className="text-[#48cae4] mr-3 text-sm leading-none drop-shadow-[0_0_3px_#48cae4] opacity-80">◈</span>
+            <span 
+              className="font-bold tracking-[0.1em] text-sm text-white/90 drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]"
+            >
+              案件历史趋势
+            </span>
+          </div>
+          
+          <div className="flex items-center bg-[#020814]/60 border border-[rgba(72,202,228,0.2)] rounded-sm overflow-hidden p-0.5 pointer-events-auto">
+            {[
+              { id: 'week', label: '本周' },
+              { id: 'month', label: '本月' },
+              { id: 'year', label: '本年' }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setTrendScale(tab.id as any)}
+                className={`px-3 py-0.5 text-[10px] rounded-[1px] transition-all duration-300 cursor-pointer ${
+                  trendScale === tab.id 
+                    ? 'bg-[#48cae4]/20 text-[#48cae4] border border-[#48cae4]/30' 
+                    : 'text-gray-500 hover:text-gray-300'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
         
         <div ref={lineChartRef} className="w-full h-full pt-8"></div>

@@ -130,22 +130,41 @@ export const cityData = [
 ];
 
 export const trendData = {
-  years: ['2022', '2023', '2024', '2025', '2026'],
-  values: [2850, 3120, 3980, 5100, 5800],
-  yoy: [14.2, 9.5, 27.5, 28.1, 13.7]
+  year: {
+    labels: ['2022', '2023', '2024', '2025', '2026'],
+    values: [2850, 3120, 3980, 5100, 5800],
+    yoy: [14.2, 9.5, 27.5, 28.1, 13.7]
+  },
+  month: {
+    labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+    values: [420, 380, 450, 510, 490, 550, 600, 580, 620, 650, 680, 720],
+    yoy: [8.5, 7.2, 12.1, 15.4, 11.2, 18.5, 20.1, 16.8, 19.4, 22.1, 23.5, 25.0]
+  },
+  week: {
+    labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+    values: [85, 92, 78, 105, 98, 45, 38],
+    yoy: [5.2, 6.8, 3.1, 10.4, 8.2, -2.1, -4.5]
+  }
 };
 
 export const brandDetails = [
-  { id: 1, city: '泉州市', district: '晋江市', brand: '安踏(ANTA)', company: '安踏体育用品集团', caseCount: 45, breakdown: { patent: 5, trademark: 35, copyright: 5 }, status: '立案调查', type: '鞋服纺织' },
-  { id: 2, city: '泉州市', district: '南安市', brand: '九牧(JOMOO)', company: '九牧厨卫股份有限公司', caseCount: 32, breakdown: { patent: 25, trademark: 5, copyright: 2 }, status: '调解中', type: '厨卫家居' },
-  { id: 3, city: '厦门市', district: '思明区', brand: '瑞幸咖啡', company: '瑞幸咖啡(中国)有限公司', caseCount: 28, breakdown: { patent: 0, trademark: 25, copyright: 3 }, status: '已宣判', type: '食品饮料' },
-  { id: 4, city: '福州市', district: '仓山区', brand: '植护', company: '福建植护网络科技有限公司', caseCount: 22, breakdown: { patent: 2, trademark: 8, copyright: 12 }, status: '立案调查', type: '其他' },
-  { id: 5, city: '泉州市', district: '晋江市', brand: '361°', company: '三六一度(中国)有限公司', caseCount: 19, breakdown: { patent: 4, trademark: 12, copyright: 3 }, status: '调解中', type: '鞋服纺织' },
-  { id: 6, city: '福州市', district: '马尾区', brand: 'AOC', company: '冠捷电子(福建)有限公司', caseCount: 15, breakdown: { patent: 12, trademark: 2, copyright: 1 }, status: '已宣判', type: '电子电器' },
-  { id: 7, city: '泉州市', district: '晋江市', brand: '特步(XTEP)', company: '特步(中国)有限公司', caseCount: 14, breakdown: { patent: 2, trademark: 10, copyright: 2 }, status: '立案调查', type: '鞋服纺织' },
-  { id: 8, city: '泉州市', district: '丰泽区', brand: '匹克(Peak)', company: '匹克体育用品有限公司', caseCount: 11, breakdown: { patent: 6, trademark: 4, copyright: 1 }, status: '调解中', type: '鞋服纺织' },
-  { id: 9, city: '厦门市', district: '湖里区', brand: '银鹭', company: '厦门银鹭食品集团', caseCount: 8, breakdown: { patent: 0, trademark: 7, copyright: 1 }, status: '已宣判', type: '食品饮料' },
-  { id: 10, city: '莆田市', district: '城厢区', brand: '三棵树', company: '三棵树涂料股份有限公司', caseCount: 6, breakdown: { patent: 4, trademark: 1, copyright: 1 }, status: '立案调查', type: '医药健康' },
+  { id: 1, city: '泉州市', district: '晋江市', brand: '安踏(主品牌)', parentGroup: '安踏集团', company: '安踏体育用品集团', caseCount: 45, breakdown: { patent: 5, trademark: 35, copyright: 5 }, status: '立案调查', type: '鞋服纺织' },
+  { id: 11, city: '泉州市', district: '晋江市', brand: 'Fila (斐乐)', parentGroup: '安踏集团', company: '安踏体育用品集团', caseCount: 12, breakdown: { patent: 1, trademark: 8, copyright: 3 }, status: '调解中', type: '鞋服纺织' },
+  { id: 12, city: '厦门市', district: '思明区', brand: 'Descente (迪桑特)', parentGroup: '安踏集团', company: '安踏体育用品集团', caseCount: 8, breakdown: { patent: 2, trademark: 5, copyright: 1 }, status: '已宣判', type: '鞋服纺织' },
+  
+  { id: 2, city: '泉州市', district: '南安市', brand: '九牧核心系列', parentGroup: '九牧集团', company: '九牧厨卫股份有限公司', caseCount: 32, breakdown: { patent: 25, trademark: 5, copyright: 2 }, status: '调解中', type: '厨卫家居' },
+  { id: 13, city: '泉州市', district: '南安市', brand: '小牧优选', parentGroup: '九牧集团', company: '九牧厨卫股份有限公司', caseCount: 7, breakdown: { patent: 3, trademark: 3, copyright: 1 }, status: '立案调查', type: '厨卫家居' },
+  
+  { id: 3, city: '厦门市', district: '思明区', brand: '瑞幸标准店', parentGroup: '瑞幸咖啡', company: '瑞幸咖啡(中国)有限公司', caseCount: 28, breakdown: { patent: 0, trademark: 25, copyright: 3 }, status: '已宣判', type: '食品饮料' },
+  { id: 14, city: '厦门市', district: '湖里区', brand: '瑞幸精选(Luckin Selected)', parentGroup: '瑞幸咖啡', company: '瑞幸咖啡(中国)有限公司', caseCount: 5, breakdown: { patent: 0, trademark: 4, copyright: 1 }, status: '立案调查', type: '食品饮料' },
+  
+  { id: 4, city: '福州市', district: '仓山区', brand: '植护纸巾', parentGroup: '植护', company: '福建植护网络科技有限公司', caseCount: 22, breakdown: { patent: 2, trademark: 8, copyright: 12 }, status: '立案调查', type: '其他' },
+  { id: 5, city: '泉州市', district: '晋江市', brand: '361°经典款', parentGroup: '361度', company: '三六一度(中国)有限公司', caseCount: 19, breakdown: { patent: 4, trademark: 12, copyright: 3 }, status: '调解中', type: '鞋服纺织' },
+  { id: 6, city: '福州市', district: '马尾区', brand: 'AOC 显示器', parentGroup: '冠捷科技', company: '冠捷电子(福建)有限公司', caseCount: 15, breakdown: { patent: 12, trademark: 2, copyright: 1 }, status: '已宣判', type: '电子电器' },
+  { id: 7, city: '泉州市', district: '晋江市', brand: '特步系列', parentGroup: '特步集团', company: '特步(中国)有限公司', caseCount: 14, breakdown: { patent: 2, trademark: 10, copyright: 2 }, status: '立案调查', type: '鞋服纺织' },
+  { id: 8, city: '泉州市', district: '丰泽区', brand: '匹克篮球', parentGroup: '匹克集团', company: '匹克体育用品有限公司', caseCount: 11, breakdown: { patent: 6, trademark: 4, copyright: 1 }, status: '调解中', type: '鞋服纺织' },
+  { id: 9, city: '厦门市', district: '湖里区', brand: '银鹭八宝粥', parentGroup: '银鹭食品', company: '厦门银鹭食品集团', caseCount: 8, breakdown: { patent: 0, trademark: 7, copyright: 1 }, status: '已宣判', type: '食品饮料' },
+  { id: 10, city: '莆田市', district: '城厢区', brand: '三棵树涂料', parentGroup: '三棵树', company: '三棵树涂料股份有限公司', caseCount: 6, breakdown: { patent: 4, trademark: 1, copyright: 1 }, status: '立案调查', type: '医药健康' },
 ];
 
 export const aiAnalysis = "基于全省知识产权大数据研判：当前【泉州市】为案件高发核心区，特别是晋江市鞋服产业带的【商标侵权】案件频发，占比达全省35%。【福州市】与【厦门市】在电子科技领域的【专利纠纷】呈现上升趋势（同比+15%）。预警提示：近期跨区域电商平台的商标侵权行为激增，建议加强线上线下的联合执法与品牌保护宣导。";

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Panel } from './Panel';
 import { brandDetails, latestDynamics } from '../data/mockData';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, AlertCircle, CheckCircle, Info, FileStack, X, Copyright, Hexagon } from 'lucide-react';
+import { Search, AlertCircle, CheckCircle, Info, FileStack, X, Copyright, Hexagon, ChevronDown, ChevronRight, MapPin, Building2 } from 'lucide-react';
 import { cn } from '../utils/cn';
 
 interface RightColumnProps {
@@ -13,16 +13,29 @@ interface RightColumnProps {
 export const RightColumn: React.FC<RightColumnProps> = ({ activeCity, activeFilter }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBrand, setSelectedBrand] = useState<(typeof brandDetails)[0] | null>(null);
+  const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
+
+  const toggleGroup = (group: string) => {
+    setExpandedGroups(prev => 
+      prev.includes(group) ? prev.filter(g => g !== group) : [...prev, group]
+    );
+  };
 
   const filteredBrands = brandDetails.filter(b => {
-    const matchSearch = b.brand.includes(searchTerm) || b.company.includes(searchTerm);
-    // Since we changed the type definition in mockData to industry type, 
-    // and the filter in MiddleColumn is for generic regions or '全部', 
-    // let's adjust this filter logically to show all if not matching explicitly.
-    const matchType = activeFilter === '全部' || b.type === activeFilter || ['商标侵权', '著作权纠纷', '专利纠纷'].includes(activeFilter) === false; // If active filter doesn't map to new types, show all for now.
+    const matchSearch = b.brand.includes(searchTerm) || b.company.includes(searchTerm) || b.parentGroup.includes(searchTerm);
+    const matchType = activeFilter === '全部' || b.type === activeFilter || ['商标侵权', '著作权纠纷', '专利纠纷'].includes(activeFilter) === false;
     const matchCity = !activeCity || b.city === activeCity;
     return matchSearch && matchCity;
   }).sort((a,b) => b.caseCount - a.caseCount);
+
+  // Grouping for tree: Parent Group -> Brands
+  const groupedData = filteredBrands.reduce((acc, curr) => {
+    if (!acc[curr.parentGroup]) acc[curr.parentGroup] = [];
+    acc[curr.parentGroup].push(curr);
+    return acc;
+  }, {} as Record<string, typeof brandDetails>);
+
+  const totalFilteredCount = filteredBrands.length;
 
   const getStatusIcon = (level: string) => {
     if (level === 'danger') return <AlertCircle size={14} className="text-[#e2c285] drop-shadow-[0_0_5px_#e2c285]" />;
@@ -97,7 +110,7 @@ export const RightColumn: React.FC<RightColumnProps> = ({ activeCity, activeFilt
               <Search size={16} className="absolute left-2 top-1/2 -translate-y-1/2 text-[#48cae4]" />
               <input 
                 type="text" 
-                placeholder="搜索品牌或公司名..." 
+                placeholder="搜索品牌或集团..." 
                 className="w-full bg-[rgba(72,202,228,0.05)] border-b border-[#48cae4]/30 px-8 py-1.5 text-sm text-white focus:outline-none focus:border-[#48cae4] focus:bg-[rgba(72,202,228,0.1)] transition-all"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -106,28 +119,58 @@ export const RightColumn: React.FC<RightColumnProps> = ({ activeCity, activeFilt
           </div>
           
           <div className="flex-1 overflow-hidden flex flex-col">
-            <div className="grid grid-cols-12 gap-2 text-xs text-[#48cae4] bg-gradient-to-r from-[rgba(72,202,228,0.1)] to-transparent p-2 rounded-t font-bold tracking-wider">
-              <div className="col-span-2">城市</div>
-              <div className="col-span-3">品牌名</div>
-              <div className="col-span-5">公司名</div>
-              <div className="col-span-2 text-center">涉案次数</div>
+            <div className="flex justify-between items-center text-[10px] text-[#48cae4] bg-gradient-to-r from-[rgba(72,202,228,0.1)] to-transparent px-3 py-1.5 rounded-t font-bold tracking-wider mb-1">
+              <span>层级: 品牌集团 / 子品牌 / 系列</span>
+              <span>共 {totalFilteredCount} 条结果</span>
             </div>
-            <div className="flex-1 overflow-y-auto pr-1 space-y-1 mt-1 custom-scrollbar">
-              {filteredBrands.map((item, i) => (
-                <div 
-                  key={item.id} 
-                  onClick={() => setSelectedBrand(item)}
-                  className="grid grid-cols-12 gap-2 text-xs text-gray-300 bg-gradient-to-r from-[rgba(2,12,30,0.4)] to-transparent p-2 hover:from-[rgba(72,202,228,0.15)] hover:to-[rgba(72,202,228,0.05)] transition-colors items-center rounded-sm cursor-pointer border border-transparent hover:border-[#48cae4]/30"
-                >
-                  <div className="col-span-2 truncate" title={item.city}>{item.city}</div>
-                  <div className="col-span-3 truncate font-medium text-white" title={item.brand}>{item.brand}</div>
-                  <div className="col-span-5 truncate" title={item.company}>{item.company}</div>
-                  <div className="col-span-2 text-center font-bold text-[#48cae4]">
-                    {item.caseCount}
+            
+            <div className="flex-1 overflow-y-auto pr-1 space-y-1 custom-scrollbar">
+              {Object.entries(groupedData).map(([group, brands]) => (
+                <div key={group} className="space-y-1">
+                  {/* Group Level */}
+                  <div 
+                    onClick={() => toggleGroup(group)}
+                    className="flex items-center gap-2 p-2 bg-[#48cae4]/5 hover:bg-[#48cae4]/10 transition-colors cursor-pointer rounded-sm border border-[rgba(72,202,228,0.1)] group"
+                  >
+                    {expandedGroups.includes(group) ? <ChevronDown size={14} className="text-[#48cae4]" /> : <ChevronRight size={14} className="text-gray-500" />}
+                    <Copyright size={14} className="text-[#48cae4] opacity-70" />
+                    <span className="text-sm font-bold text-white/90">{group}</span>
+                    <span className="ml-auto text-[10px] text-gray-500 bg-gray-900/50 px-1.5 py-0.5 rounded-full border border-gray-800">
+                      {brands.length} 品牌
+                    </span>
                   </div>
+
+                  {/* Brands (Conditional) */}
+                  {expandedGroups.includes(group) && (
+                    <motion.div 
+                      initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }}
+                      className="ml-3 space-y-1 border-l border-[#48cae4]/10 pl-2"
+                    >
+                      {brands.map((item) => (
+                        <div 
+                          key={item.id} 
+                          onClick={() => setSelectedBrand(item)}
+                          className="px-3 py-2 text-xs text-gray-400 bg-gradient-to-r from-[rgba(2,12,30,0.4)] to-transparent hover:from-[rgba(72,202,228,0.15)] hover:to-[rgba(72,202,228,0.05)] transition-all items-center rounded-sm cursor-pointer border border-transparent hover:border-[#48cae4]/30 group flex justify-between"
+                        >
+                          <div className="flex flex-col">
+                            <span className="font-bold text-gray-200 group-hover:text-[#48cae4] transition-colors">{item.brand}</span>
+                            <div className="flex items-center gap-2 mt-1">
+                              <MapPin size={8} className="text-gray-600" />
+                              <span className="text-[10px] text-gray-600 truncate max-w-[120px]">{item.city} · {item.district}</span>
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-end">
+                            <span className="text-[#48cae4] font-mono font-bold leading-none">{item.caseCount}</span>
+                            <span className="text-[9px] text-gray-600 mt-0.5">案件数</span>
+                          </div>
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
                 </div>
               ))}
-              {filteredBrands.length === 0 && (
+              
+              {totalFilteredCount === 0 && (
                 <div className="text-center text-gray-500 mt-8 text-sm">暂无匹配数据</div>
               )}
             </div>
